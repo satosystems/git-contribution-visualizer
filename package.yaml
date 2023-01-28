@@ -1,23 +1,19 @@
 name: git-contribution-visualizer
 version: 0.1.0.0
-github: "githubuser/git-contribution-visualizer"
+github: "satosystems/git-contribution-visualizer"
 license: BSD3
-author: "Author name here"
-maintainer: "example@example.com"
-copyright: "2023 Author name here"
+author: "Satoshi Ogata"
+maintainer: "satosystems@gmail.com"
+copyright: "(c) 2023 Satoshi Ogata"
 
 extra-source-files:
   - README.md
   - CHANGELOG.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+synopsis: Git contribution visualizer
+category: CLI
 
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description: Please see the README on GitHub at <https://github.com/githubuser/git-contribution-visualizer#readme>
+description: Please see the README on GitHub at <https://github.com/satosystems/git-contribution-visualizer#readme>
 
 dependencies:
   - base >= 4.7 && < 5
@@ -37,7 +33,7 @@ library:
   source-dirs: src
 
 executables:
-  git-contribution-visualizer-exe:
+  git-contribution-visualizer:
     main: Main.hs
     source-dirs: app
     ghc-options:
@@ -48,7 +44,7 @@ executables:
       - git-contribution-visualizer
 
 tests:
-  git-contribution-visualizer-test:
+  test:
     main: Spec.hs
     source-dirs: test
     ghc-options:

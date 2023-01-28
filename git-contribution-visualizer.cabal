@@ -6,12 +6,14 @@ cabal-version: 1.12
 
 name:           git-contribution-visualizer
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/git-contribution-visualizer#readme>
-homepage:       https://github.com/githubuser/git-contribution-visualizer#readme
-bug-reports:    https://github.com/githubuser/git-contribution-visualizer/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
+synopsis:       Git contribution visualizer
+description:    Please see the README on GitHub at <https://github.com/satosystems/git-contribution-visualizer#readme>
+category:       CLI
+homepage:       https://github.com/satosystems/git-contribution-visualizer#readme
+bug-reports:    https://github.com/satosystems/git-contribution-visualizer/issues
+author:         Satoshi Ogata
+maintainer:     satosystems@gmail.com
+copyright:      (c) 2023 Satoshi Ogata
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -21,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/git-contribution-visualizer
+  location: https://github.com/satosystems/git-contribution-visualizer
 
 library
   exposed-modules:
@@ -35,7 +37,7 @@ library
       base >=4.7 && <5
   default-language: Haskell2010
 
-executable git-contribution-visualizer-exe
+executable git-contribution-visualizer
   main-is: Main.hs
   other-modules:
       Paths_git_contribution_visualizer
@@ -47,7 +49,7 @@ executable git-contribution-visualizer-exe
     , git-contribution-visualizer
   default-language: Haskell2010
 
-test-suite git-contribution-visualizer-test
+test-suite test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
