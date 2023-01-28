@@ -1,2 +1,4 @@
 *~
 .stack-work/
+.vscode/dist-cabal-repl/
+.vscode/phoityne.log
