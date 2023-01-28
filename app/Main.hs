@@ -2,7 +2,7 @@ module Main
   ( main
   ) where
 
-import           Lib (someFunc)
+import           Lib (run)
 
 main :: IO ()
-main = someFunc
+main = run
