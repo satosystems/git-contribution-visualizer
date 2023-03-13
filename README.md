@@ -13,19 +13,29 @@
     $ cd git-contribution-visualizer
     $ stack install
     ...
-    $ export PATH="$(pwd)/shell:$HOME/.local/bin:$PATH"
+    $ ln -s "$(pwd)/shell/git-cvb" "$HOME/.local/bin/git-cvb"
+    $ ln -s "$(pwd)/shell/git-cvc" "$HOME/.local/bin/git-cvc"
+    $ export PATH="$HOME/.local/bin:$PATH"
     $
     ```
 
-3. 以下コマンドの出力をスプレッドシートの Data シートにペースト
+3. 以下コマンドの出力をスプレッドシートの Commits シートにペースト
 
     ```shell-session
-    $ git cv | pbcopy # macOS の場合
+    $ git cvc | pbcopy # macOS の場合
     ...
     $
     ```
 
-4. Author mapping シートを任意で修正し、名寄を行う
+4. 以下コマンドの出力をスプレッドシートの Blames シートにペースト
+
+    ```shell-session
+    $ git cvb | pbcopy # macOS の場合
+    ...
+    $
+    ```
+
+5. Author mapping シートを任意で修正し、名寄を行う
 
 ## 可視化
 
