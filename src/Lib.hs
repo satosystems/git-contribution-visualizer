@@ -2,13 +2,12 @@ module Lib
   ( run
   ) where
 
-import           Control.Monad            (when)
 import           Data.List                (intercalate, isPrefixOf)
 import           Data.List.Split          (splitOn)
-import           Data.Maybe               (fromMaybe)
+import           Data.Maybe               (fromJust, fromMaybe, isJust)
 import           Data.Time.Format.ISO8601 (iso8601ParseM)
 import           Data.Time.LocalTime      (ZonedTime)
-import           System.Environment       (lookupEnv)
+import           System.Environment       (getArgs, lookupEnv)
 import           System.Exit              (exitFailure)
 
 data Commit =
@@ -24,35 +23,67 @@ data Commit =
     }
   deriving (Show, Read)
 
-toRecord :: String -> Commit -> IO String
-toRecord repository (Commit _ an ae ad cn ce cd s) = do
-  ztad <- iso8601ParseM ad :: IO ZonedTime
-  ztcd <- iso8601ParseM cd :: IO ZonedTime
-  -- "2023-02-02 13:10:49 +0900" => "2023-02-02 13:10:49"
-  let sprittedZtad = " " `splitOn` show ztad
-  let sprittedZtcd = " " `splitOn` show ztcd
-  let at = head sprittedZtad ++ " " ++ sprittedZtad !! 1
-  let ct = head sprittedZtcd ++ " " ++ sprittedZtcd !! 1
-  return $
-    intercalate
-      "\t"
-      [ repository
-      , an
-      , ae
-      , at
-      , cn
-      , ce
-      , ct
-      , show ("Merge-pull-request-" `isPrefixOf` s)
-      , s
-      ]
+toRecord :: String -> Commit -> Maybe String
+toRecord repository (Commit _ an ae ad cn ce cd s) =
+  let ztad = fromJust $ iso8601ParseM ad :: ZonedTime
+      ztcd = fromJust $ iso8601ParseM cd :: ZonedTime
+      -- "2023-02-02 13:10:49 +0900" => "2023-02-02 13:10:49"
+      sprittedZtad = " " `splitOn` show ztad
+      sprittedZtcd = " " `splitOn` show ztcd
+      at = head sprittedZtad ++ " " ++ sprittedZtad !! 1
+      ct = head sprittedZtcd ++ " " ++ sprittedZtcd !! 1
+   in Just $
+      intercalate
+        "\t"
+        [ repository
+        , an
+        , ae
+        , at
+        , cn
+        , ce
+        , ct
+        , show ("Merge-pull-request-" `isPrefixOf` s)
+        , s
+        ]
+
+listCommits :: String -> [String] -> Maybe String
+listCommits _ [] = Nothing
+listCommits repository commits =
+  Just $
+  unlines $
+  map (fromJust . toRecord repository) $
+  read $ "[" ++ intercalate "," commits ++ "]"
+
+countBlames :: String -> [String] -> Maybe String
+countBlames _ [] = Nothing
+countBlames repository blames = Just $ countBlames' blames []
+  where
+    countBlames' :: [String] -> [(String, Int)] -> String
+    countBlames' [] acc =
+      foldl
+        (\s (name, count) ->
+           s ++ "\n" ++ repository ++ "\t" ++ name ++ "\t" ++ show count ++ "\n")
+        ""
+        acc
+    countBlames' (s:ss) acc =
+      let name = unwords $ reverse $ drop 4 $ reverse $ words s
+          mCount = lookup name acc
+       in if isJust mCount
+            then let count = fromJust mCount
+                  in countBlames' ss $
+                     (name, succ count) :
+                     filter (\(name', _) -> name /= name') acc
+            else countBlames' ss $ (name, 1) : acc
 
 run :: IO ()
 run = do
   mRepository <- lookupEnv "REPOSITORY"
   let repository = fromMaybe "" mRepository
   contents <- getContents
-  let commits = read $ "[" ++ intercalate "," (lines contents) ++ "]"
-  null commits `when` exitFailure
-  records <- mapM (toRecord repository) commits
-  putStr $ unlines records
+  args <- getArgs
+  let fn =
+        if head args == "listCommits"
+          then listCommits
+          else countBlames
+  let mResult = fn repository $ lines contents
+  maybe exitFailure putStr mResult
