@@ -3,7 +3,6 @@ module Lib
   ) where
 
 import           Data.List                (intercalate, isPrefixOf)
-import           Data.List.Split          (splitOn)
 import           Data.Maybe               (fromJust, fromMaybe, isJust)
 import           Data.Time.Format.ISO8601 (iso8601ParseM)
 import           Data.Time.LocalTime      (ZonedTime)
@@ -28,8 +27,8 @@ toRecord repository (Commit _ an ae ad cn ce cd s) =
   let ztad = fromJust $ iso8601ParseM ad :: ZonedTime
       ztcd = fromJust $ iso8601ParseM cd :: ZonedTime
       -- "2023-02-02 13:10:49 +0900" => "2023-02-02 13:10:49"
-      sprittedZtad = " " `splitOn` show ztad
-      sprittedZtcd = " " `splitOn` show ztcd
+      sprittedZtad = words $ show ztad
+      sprittedZtcd = words $ show ztcd
       at = head sprittedZtad ++ " " ++ sprittedZtad !! 1
       ct = head sprittedZtcd ++ " " ++ sprittedZtcd !! 1
    in Just $
