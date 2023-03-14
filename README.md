@@ -4,7 +4,7 @@
 
 ## 利用方法
 
-1. [Google スプレッドシート](https://docs.google.com/spreadsheets/d/14Z2yCX8wDWQYJPoX9CiObmQw-hy1Wlt4CvrxAiXZ1ww/edit#gid=0)をコピー、またはダウンロードしておく。
+1. [Google スプレッドシート](https://docs.google.com/spreadsheets/d/1u2qs3_BSb9R72DWI-MkloH0AcBiea_z0cKeVMlxQ3Rc/edit#gid=0)をコピー、またはダウンロードしておく。
 2. 以下コマンドを実行してインストール
 
     ```shell-session
