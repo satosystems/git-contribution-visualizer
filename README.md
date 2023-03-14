@@ -19,7 +19,7 @@
     $
     ```
 
-3. 以下コマンドの出力をスプレッドシートの Commits シートにペースト
+3. 以下コマンドの出力をスプレッドシートの Commits シートの A2 にペースト
 
     ```shell-session
     $ git cvc | pbcopy # macOS の場合
@@ -27,7 +27,7 @@
     $
     ```
 
-4. 以下コマンドの出力をスプレッドシートの Blames シートにペースト
+4. 以下コマンドの出力をスプレッドシートの Blames シートの A2 にペースト
 
     ```shell-session
     $ git cvb | pbcopy # macOS の場合
