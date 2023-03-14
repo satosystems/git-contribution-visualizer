@@ -1,3 +1,17 @@
 #!/usr/bin/env bash
 
-git ls-files | xargs -I '{}' git blame -CMw '{}' | awk -F '[()]' '{print $2}' | git-contribution-visualizer countBlames | sort | uniq | awk '$0 != "" {print $0}'
+filter_text() {
+  for f in $(git ls-files)
+  do
+    file "$f" | grep text > /dev/null 2>&1 && echo "$f"
+  done
+}
+
+blames() {
+  for f in $(filter_text)
+  do
+    git blame -CMw "$f" | awk -F '[()]' '{ print $2 }'
+  done
+}
+
+blames | git-contribution-visualizer countBlames | sort | uniq | awk -F '\t' '$0 != "" { a[$2] += $3 } END { for (k in a) print k "\t" a[k] }'
