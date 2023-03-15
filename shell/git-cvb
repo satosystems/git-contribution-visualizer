@@ -14,4 +14,4 @@ blames() {
   done
 }
 
-blames | git-contribution-visualizer countBlames | sort | uniq | awk -F '\t' '$0 != "" { a[$2] += $3 } END { for (k in a) print k "\t" a[k] }'
+blames | git-contribution-visualizer countBlames | awk -F '\t' '$0 != "" { a[$2] += $3 } END { for (k in a) print k "\t" a[k] }'
