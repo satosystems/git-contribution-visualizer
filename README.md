@@ -44,3 +44,8 @@
 Charts シートに可視化される。
 
 ![git-contribution-visualizer_charts](https://user-images.githubusercontent.com/1842469/222305124-14d4b8d1-11c8-4d21-88ee-0272af6c508b.png)
+
+## TODO
+
+- マージコミットの判定方法を見直し
+- 速度改善
