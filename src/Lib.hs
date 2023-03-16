@@ -59,7 +59,7 @@ countBlames repository contents = go (lines contents) []
         ""
         acc
     go (s:ss) acc =
-      let name = unwords $ reverse $ drop 4 $ reverse $ words s
+      let name = (unwords . reverse . drop 4 . reverse . words) s
           mCount = lookup name acc
        in if isJust mCount
             then let count = fromJust mCount
