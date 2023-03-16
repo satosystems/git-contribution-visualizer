@@ -2,7 +2,7 @@ module Lib
   ( run
   ) where
 
-import           Data.List                (intercalate, isPrefixOf)
+import           Data.List                (intercalate)
 import           Data.Maybe               (fromJust, fromMaybe, isJust)
 import           Data.Time.Format.ISO8601 (iso8601ParseM)
 import           Data.Time.LocalTime      (ZonedTime)
@@ -22,8 +22,15 @@ data Commit =
     }
   deriving (Show, Read)
 
-toRecord :: String -> Commit -> Maybe String
-toRecord repository (Commit _ an ae ad cn ce cd s) =
+data Input =
+  Input
+    { mergeCommits :: [String]
+    , commits      :: [Commit]
+    }
+  deriving (Read, Show)
+
+toRecord :: String -> [String] -> Commit -> Maybe String
+toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
   let ztad = fromJust $ iso8601ParseM ad :: ZonedTime
       ztcd = fromJust $ iso8601ParseM cd :: ZonedTime
       -- "2023-02-02 13:10:49 +0900" => "2023-02-02 13:10:49"
@@ -34,28 +41,19 @@ toRecord repository (Commit _ an ae ad cn ce cd s) =
    in Just $
       intercalate
         "\t"
-        [ repository
-        , an
-        , ae
-        , at
-        , cn
-        , ce
-        , ct
-        , show ("Merge-pull-request-" `isPrefixOf` s)
-        , s
-        ]
+        [repository, an, ae, at, cn, ce, ct, show (ch `elem` mchs), s]
 
-listCommits :: String -> [String] -> Maybe String
-listCommits _ [] = Nothing
-listCommits repository commits =
-  Just $
-  unlines $
-  map (fromJust . toRecord repository) $
-  read $ "[" ++ intercalate "," commits ++ "]"
+listCommits :: String -> String -> Maybe String
+listCommits _ "" = Nothing
+listCommits repository contents =
+  let Input mchs cs = read contents
+      mchs' = tail mchs
+      cs' = tail cs
+   in Just $ unlines $ map (fromJust . toRecord repository mchs') cs'
 
-countBlames :: String -> [String] -> Maybe String
-countBlames _ [] = Nothing
-countBlames repository blames = Just $ countBlames' blames []
+countBlames :: String -> String -> Maybe String
+countBlames _ "" = Nothing
+countBlames repository contents = Just $ countBlames' (lines contents) []
   where
     countBlames' :: [String] -> [(String, Int)] -> String
     countBlames' [] acc =
@@ -84,5 +82,5 @@ run = do
         if head args == "listCommits"
           then listCommits
           else countBlames
-  let mResult = fn repository $ lines contents
+  let mResult = fn repository contents
   maybe exitFailure putStr mResult

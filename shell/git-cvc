@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
 
-git log --pretty=format:'Commit{commitHash="%H",authorName="%an",authorEmail="%ae",authorDate="%aI",committerName="%cn",committerEmail="%ce",committerDate="%cI",subject="%f"}' | REPOSITORY=$(git remote -v | grep '^origin' | grep '(fetch)$' | awk '{print $2}' | awk -F'/' '{print $NF}' | awk -F'.' '{print $1}') git-contribution-visualizer listCommits
+echo -e 'Input{mergeCommits=[\n""' > $TMPDIR/.git-cvc.txt
+git log --merges --pretty=format:',"%H"' >> $TMPDIR/.git-cvc.txt
+echo -e '\n],\ncommits=[\nCommit{commitHash="",authorName="",authorEmail="",authorDate="",committerName="",committerEmail="",committerDate="",subject=""}' >> $TMPDIR/.git-cvc.txt
+git log --pretty=format:',Commit{commitHash="%H",authorName="%an",authorEmail="%ae",authorDate="%aI",committerName="%cn",committerEmail="%ce",committerDate="%cI",subject="%f"}' >> $TMPDIR/.git-cvc.txt
+echo -e '\n]}' >> $TMPDIR/.git-cvc.txt
+cat $TMPDIR/.git-cvc.txt | REPOSITORY=$(git remote -v | grep '^origin' | grep '(fetch)$' | awk '{print $2}' | awk -F'/' '{print $NF}' | awk -F'.' '{print $1}') git-contribution-visualizer listCommits
+rm $TMPDIR/.git-cvc.txt
