@@ -7,7 +7,6 @@ import           Data.Maybe               (fromJust, fromMaybe, isJust)
 import           Data.Time.Format.ISO8601 (iso8601ParseM)
 import           Data.Time.LocalTime      (ZonedTime)
 import           System.Environment       (getArgs, lookupEnv)
-import           System.Exit              (exitFailure)
 
 data Commit =
   Commit
@@ -42,17 +41,15 @@ toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
         "\t"
         [repository, an, ae, at, cn, ce, ct, show (ch `elem` mchs), s]
 
-listCommits :: String -> String -> Maybe String
-listCommits _ "" = Nothing
+listCommits :: String -> String -> String
 listCommits repository contents =
   let Input mchs cs = read contents
       mchs' = tail mchs
       cs' = tail cs
-   in Just $ unlines $ map (toRecord repository mchs') cs'
+   in unlines $ map (toRecord repository mchs') cs'
 
-countBlames :: String -> String -> Maybe String
-countBlames _ "" = Nothing
-countBlames repository contents = Just $ countBlames' (lines contents) []
+countBlames :: String -> String -> String
+countBlames repository contents = countBlames' (lines contents) []
   where
     countBlames' :: [String] -> [(String, Int)] -> String
     countBlames' [] acc =
@@ -81,5 +78,4 @@ run = do
         if head args == "listCommits"
           then listCommits
           else countBlames
-  let mResult = fn repository contents
-  maybe exitFailure putStr mResult
+  putStr $ fn repository contents
