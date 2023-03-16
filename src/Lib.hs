@@ -29,7 +29,7 @@ data Input =
     }
   deriving (Read, Show)
 
-toRecord :: String -> [String] -> Commit -> Maybe String
+toRecord :: String -> [String] -> Commit -> String
 toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
   let ztad = fromJust $ iso8601ParseM ad :: ZonedTime
       ztcd = fromJust $ iso8601ParseM cd :: ZonedTime
@@ -38,8 +38,7 @@ toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
       sprittedZtcd = words $ show ztcd
       at = head sprittedZtad ++ " " ++ sprittedZtad !! 1
       ct = head sprittedZtcd ++ " " ++ sprittedZtcd !! 1
-   in Just $
-      intercalate
+   in intercalate
         "\t"
         [repository, an, ae, at, cn, ce, ct, show (ch `elem` mchs), s]
 
@@ -49,7 +48,7 @@ listCommits repository contents =
   let Input mchs cs = read contents
       mchs' = tail mchs
       cs' = tail cs
-   in Just $ unlines $ map (fromJust . toRecord repository mchs') cs'
+   in Just $ unlines $ map (toRecord repository mchs') cs'
 
 countBlames :: String -> String -> Maybe String
 countBlames _ "" = Nothing
