@@ -33,10 +33,12 @@ toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
   let ztad = fromJust $ iso8601ParseM ad :: ZonedTime
       ztcd = fromJust $ iso8601ParseM cd :: ZonedTime
       -- "2023-02-02 13:10:49 +0900" => "2023-02-02 13:10:49"
-      sprittedZtad = words $ show ztad
-      sprittedZtcd = words $ show ztcd
-      at = head sprittedZtad ++ " " ++ sprittedZtad !! 1
-      ct = head sprittedZtcd ++ " " ++ sprittedZtcd !! 1
+      f :: ZonedTime -> String
+      f zt =
+        let spritted = words $ show zt
+         in head spritted ++ " " spritted !! 1
+      at = f ztad
+      ct = f ztcd
    in intercalate
         "\t"
         [repository, an, ae, at, cn, ce, ct, show (ch `elem` mchs), s]
