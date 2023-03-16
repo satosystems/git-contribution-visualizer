@@ -49,24 +49,24 @@ listCommits repository contents =
    in unlines $ map (toRecord repository mchs') cs'
 
 countBlames :: String -> String -> String
-countBlames repository contents = countBlames' (lines contents) []
+countBlames repository contents = go (lines contents) []
   where
-    countBlames' :: [String] -> [(String, Int)] -> String
-    countBlames' [] acc =
+    go :: [String] -> [(String, Int)] -> String
+    go [] acc =
       foldl
         (\s (name, count) ->
            s ++ "\n" ++ repository ++ "\t" ++ name ++ "\t" ++ show count ++ "\n")
         ""
         acc
-    countBlames' (s:ss) acc =
+    go (s:ss) acc =
       let name = unwords $ reverse $ drop 4 $ reverse $ words s
           mCount = lookup name acc
        in if isJust mCount
             then let count = fromJust mCount
-                  in countBlames' ss $
+                  in go ss $
                      (name, succ count) :
                      filter (\(name', _) -> name /= name') acc
-            else countBlames' ss $ (name, 1) : acc
+            else go ss $ (name, 1) : acc
 
 run :: IO ()
 run = do
