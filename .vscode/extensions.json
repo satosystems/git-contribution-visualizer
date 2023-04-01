@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "emeraldwalk.runonsave",
+    "esbenp.prettier-vscode",
+    "haskell.haskell",
+    "hoovercj.haskell-linter",
+    "justusadam.language-haskell",
+    "yzhang.markdown-all-in-one"
+  ]
+}
