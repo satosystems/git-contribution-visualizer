@@ -36,7 +36,7 @@ toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
       f :: ZonedTime -> String
       f zt =
         let spritted = words $ show zt
-         in head spritted ++ " " spritted !! 1
+         in head spritted ++ " " ++ spritted !! 1
       at = f ztad
       ct = f ztcd
    in intercalate
