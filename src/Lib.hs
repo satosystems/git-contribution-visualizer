@@ -35,8 +35,8 @@ toRecord repository mchs (Commit ch an ae ad cn ce cd s) =
       -- "2023-02-02 13:10:49 +0900" => "2023-02-02 13:10:49"
       f :: ZonedTime -> String
       f zt =
-        let spritted = words $ show zt
-         in head spritted ++ " " ++ spritted !! 1
+        let splitted = words $ show zt
+         in head splitted ++ " " ++ splitted !! 1
       at = f ztad
       ct = f ztcd
    in intercalate
